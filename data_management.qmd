@@ -1,0 +1,37 @@
+---
+title: "Data Management"
+author: "Anmol Virdi"
+format: pdf
+---
+
+## Import
+
+The data are the CDC PLACES county data (GIS friendly format), 2025 release. The file is downloaded into `data/`, which is listed in `.gitignore` so it is not pushed to GitHub.
+
+```{r}
+#| message: false
+library(tidyverse)
+
+dir.create("data", showWarnings = FALSE)
+file_path <- "data/places_county_2025.csv"
+
+if (!file.exists(file_path)) {
+  download.file(
+    "https://data.cdc.gov/api/views/i46a-9kgh/rows.csv?accessType=DOWNLOAD",
+    file_path, mode = "wb"
+  )
+}
+
+places <- read_csv(file_path)
+```
+
+## Glimpse
+
+The full file has over 200 columns, so this shows only the variables used in the proposal.
+
+```{r}
+places |>
+  select(StateAbbr, CountyName, CountyFIPS, TotalPopulation,
+         CANCER_AdjPrev, CSMOKING_AdjPrev, OBESITY_AdjPrev, LPA_AdjPrev) |>
+  glimpse()
+```
